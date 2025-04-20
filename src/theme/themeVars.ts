@@ -1,0 +1,46 @@
+import { vars } from "nativewind";
+
+export const themesVars = {
+  light: vars({
+    "--primary": "#04ab52",
+    "--primary-light": "#BFFBCE",
+    "--secondary": "#049ad2",
+    "--primary-text": "#2B2B2B",
+    "--card": "#ffffff",
+    "--text": "#2B2B2B",
+    "--text-invert": "#E0E0E0",
+    "--subtext": "#7D7D7D",
+    "--accent": "#ff6838",
+    "--inactive": "#BDBDBD",
+    "--divider": "#EBEBEB",
+    "--sub-card": "#FFFFFF",
+    "--off-white": "#F7F7F7",
+    "--card-reverse": "#111111",
+    "--tag": "#D7F4FF",
+    // Access by useThemeVariable
+    "--green-300": "#BFFBCE",
+    "--blue-300": "#D7F4FF",
+    "--orange-300": "#FDDFD6",
+  }),
+  dark: vars({
+    "--primary": "#04ab52",
+    "--primary-light": "#00320D",
+    "--secondary": "#049ad2",
+    "--primary-text": "#111111",
+    "--card": "#111111",
+    "--text": "#E0E0E0",
+    "--text-invert": "#2B2B2B",
+    "--subtext": "#898989",
+    "--accent": "#ff6838",
+    "--inactive": "#898989",
+    "--divider": "#2F2F2F",
+    "--sub-card": "#202020",
+    "--off-white": "#202020",
+    "--card-reverse": "#ffffff",
+    "--tag": "#002635",
+    // Access by useThemeVariable
+    "--green-300": "#00320D",
+    "--blue-300": "#002635",
+    "--orange-300": "#501300",
+  }),
+};
