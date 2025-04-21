@@ -47,13 +47,16 @@ const TrackScrubber = forwardRef<TrackScrubberRef, TrackScrubberProps>(
       const subscribe = TrackPlayer.addEventListener(
         Event.PlaybackProgressUpdated,
         (payload) => {
+          if (isScrubbing.get() === true) {
+            return;
+          }
           const value = Math.floor(payload.position);
           setSecond(value);
           progress.value = value;
         }
       );
       return subscribe.remove;
-    }, []);
+    }, [isScrubbing]);
     const onSlidingComplete = useCallback((value: number) => {
       TrackPlayer.seekTo(Math.floor(value));
     }, []);
