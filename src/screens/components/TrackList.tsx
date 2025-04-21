@@ -6,47 +6,47 @@ import {
 } from "@legendapp/list";
 import { useQuery } from "@tanstack/react-query";
 import {
+  forwardRef,
   MutableRefObject,
   useCallback,
-  useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from "react";
-import TrackPlayer, { Event, type Track } from "react-native-track-player";
+import TrackPlayer, { type Track } from "react-native-track-player";
 import device from "../../platform/device";
 import TrackCardPlayer from "./TrackCardPlayer";
-const TrackList = () => {
+
+export interface TrackListRef {
+  scrollTo: (to: "prev" | "next") => void;
+}
+const TrackList = (_: any, ref: any) => {
   const { data } = useQuery({
     queryKey: ["queryTrack"],
     queryFn: () => {
       return TrackPlayer.getQueue();
     },
   });
-  const [visibleIndex, setVisibleIndex] = useState(0);
   const renderItem = useCallback(
-    ({ item, extraData, index }: LegendListRenderItemProps<Track>) => {
-      const onSkipNext = () => listRef.current.scrollToIndex({ index: index+1 });
-      const onSkipPrev = () => {
-        if (index !== 0) {
-          listRef.current.scrollToIndex({ index: index - 1 });
-        }
-      };
-
-      return (
-        <TrackCardPlayer
-          onSkipPrev={onSkipPrev}
-          onSkipNext={onSkipNext}
-          visibleIndex={extraData}
-          index={index}
-          {...item}
-        />
-      );
+    ({ item }: LegendListRenderItemProps<Track>) => {
+      return <TrackCardPlayer {...item} />;
     },
     []
   );
   const listRef = useRef(null) as MutableRefObject<LegendListRef | null>;
-
+  const [visibleIndex, setVisibleIndex] = useState(0);
+  useImperativeHandle(
+    ref,
+    () => ({
+      scrollTo: (to: "prev" | "next") => {
+        listRef.current?.scrollToIndex({
+          index: visibleIndex + (to === "next" ? 1 : -1),
+        });
+      },
+    }),
+    [visibleIndex]
+  );
   const [onViewableItemsChanged, viewabilityConfig] = useMemo(() => {
     return [
       (info: { viewableItems: ViewToken[]; changed: ViewToken[] }) => {
@@ -67,16 +67,17 @@ const TrackList = () => {
       data={data || []}
       ref={listRef}
       horizontal
-      extraData={visibleIndex}
       pagingEnabled
       renderItem={renderItem}
       recycleItems
       estimatedItemSize={device.width}
       drawDistance={device.width}
-      onViewableItemsChanged={onViewableItemsChanged}
+      showsHorizontalScrollIndicator={false}
+      scrollEnabled={false}
       viewabilityConfig={viewabilityConfig}
+      onViewableItemsChanged={onViewableItemsChanged}
     />
   );
 };
 
-export default TrackList;
+export default forwardRef<TrackListRef, any>(TrackList);
